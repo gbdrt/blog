@@ -209,6 +209,6 @@ hyperjump(P, N, R) :-
     reverse([9 | S], R).
 ```
 
-With this approach I was finally able to reach the last level of every puzzle with scores of 14 to 16. 
+With this approach I was finally able to reach the last level of every puzzle with scores ranging from 14 to a record of 19. 
 
 ------------------------------------

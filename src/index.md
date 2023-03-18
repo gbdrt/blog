@@ -2,9 +2,9 @@
 title: "gbdrt.dev"
 ---
 
-Hello, I am Guillaume Baudart, a Researcher at Inria Paris.
-Before that, I was a Research Staff member at IBM Research.
-Before that, I was a PhD Student at ENS Paris.
+Hello, I am Guillaume Baudart, a Researcher at [Inria Paris](https://www.inria.fr/en/inria-paris-centre).
+Before that, I was a Research Staff Member at [IBM Research](https://research.ibm.com/labs/watson/).
+Before that, I was a PhD student at [ENS Paris](https://www.ens.psl.eu/en).
 
 This is a personal blog about my recent interests.
 My professional page can be found [here](https://guillaume.baudart.eu).
