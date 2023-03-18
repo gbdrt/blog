@@ -41,7 +41,7 @@ valid(X1, X2, X3) :- X3 is mod((X1 * X2), 10).
 valid(X1, X2, X3) :- X3 is mod((X1 // X2), 10), 0 is mod(X1, X2).
 ```
 
-Now, we need a relation that capture the fact that we pick digits from a set.
+Now, we need a relation that captures the fact that we pick digits from a set.
 This is a classic prolog relation `pick(L, X, R)` where `L` is the initial list, `X` is the chosen element, and `R` is the resulting list (`L` without `X`).^[`[X | T]` is the Prolog syntax for a list whose head element is `X` and `T` is the tail of the list.]
 In Prolog we can program the relation `pick` with 2 cases: chose the head of the list, or choose an element in the tail.
 
@@ -138,7 +138,7 @@ decimal([X | R], N) :-
 ```
 
 We can now add a relation `combo(L, X2, X3)` to capture the new rule.
-For the subtraction, at worst we need to combine 2 digits^[$(223 - 4) \mod 10 = (23 - 4) \mod 10 = 9$], combining 3 or more digits would yield the same result.
+For the subtraction, at worst we need to combine 2 digits,^[$(223 - 4) \mod 10 = (23 - 4) \mod 10 = 9$] combining 3 or more digits would yield the same result.
 
 ```prolog
 combo([A2, A1], X2, X3) :-
