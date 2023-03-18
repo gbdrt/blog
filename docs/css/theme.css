@@ -163,7 +163,6 @@ body {
   padding: 0;
   padding-top: var(--title-margin-top);
   width: 100%;
-  text-align: justify;
   background-color: var(--background-color);
 }
 
