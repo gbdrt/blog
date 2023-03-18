@@ -91,4 +91,7 @@ $for(include-after)$
 $include-after$
 $endfor$
 </body>
+<footer>
+Powered by <a href="https://pandoc.org/">Pandoc</a> with a theme sligthly adapted from <a href="">pandoc-markdown-css-theme</a>
+</footer>
 </html>

@@ -460,6 +460,11 @@ span.mark.purple, mark.purple { background-color: var(--highlight-purple); }
   margin-bottom: calc(4 * var(--line-height));
 }
 
+footer {
+  color: var(--color-sidenote);
+  font-size: var(--side-note-font-size);
+}
+
 /* Pandoc utility classes */
 span.smallcaps{ font-variant: small-caps; }
 span.underline{ text-decoration: underline; }

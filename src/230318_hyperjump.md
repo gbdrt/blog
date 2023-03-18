@@ -1,10 +1,10 @@
 ---
-title: "Learning Prolog with Hyperjump from Quanta Magazine"
+title: "Solving Quanta Magazine Hyperjump with Prolog"
 author: "Guillaume Baudart"
 date: "2023-03-18"
 ---
 
-I recently came accross [Hyperjump](https://hyperjumps.quantamagazine.org) -- a recent online game by Quanta Magazine -- and had a lot of fun playing this game.
+I recently came accross [Hyperjump](https://hyperjumps.quantamagazine.org) -- a recent online game by [Quanta Magazine](https://www.quantamagazine.org/) -- and had a lot of fun playing this game.
 
 The goal is to order a set of digits into a sequence that follows simple arithmetic rules.
 
