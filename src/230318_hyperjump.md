@@ -210,3 +210,5 @@ hyperjump(P, N, R) :-
 ```
 
 With this approach I was finally able to reach the last level of every puzzle with scores of 14 to 16. 
+
+------------------------------------
