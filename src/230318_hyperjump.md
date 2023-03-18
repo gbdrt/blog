@@ -138,7 +138,7 @@ decimal([X | R], N) :-
 ```
 
 We can now add a relation `combo(L, X2, X3)` to capture the new rule.
-For the subtraction, at worst we need to combine 2 digits,^[$(223 - 4) \mod 10 = (23 - 4) \mod 10 = 9$] combining 3 or more digits would yield the same result.
+For the subtraction, at worst we need to combine 2 digits,^[For instance, $(223 - 4) \mod 10 = (23 - 4) \mod 10 = 9$.] combining 3 or more digits would yield the same result.
 
 ```prolog
 combo([A2, A1], X2, X3) :-
