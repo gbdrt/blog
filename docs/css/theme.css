@@ -552,7 +552,7 @@ pre.numberSource code {
 
 pre > code.sourceCode > span {
   line-height: var(--line-height);
-
+  white-space: pre;
   display: inline-block;
   min-width: 100%;
 }
