@@ -1,6 +1,6 @@
 /*! https://github.com/runxel/skylighting-theme */
 
-pre.sourceCode { background: hsla(0, 0%, 0%, 0.035) }
+pre.sourceCode { background: rgb(240, 240, 240) }
 pre code { color: #657B83; }
 code span.kw { color: #009952; } /* Keyword */
 code span.dt { color: #6400b5; } /* DataType */
