@@ -13,7 +13,7 @@ The goal is to order a set of digits into a sequence that follows simple arithme
 
 \begin{array}{l@{}c@{}l@{}c@{}l}
     (X_{n-2} &+& X_{n-1}) \mod 10 &=& X_{n}\\
-    (X_{n-2} &-& X_{n-2}) \mod 10 &=& X_{n} \quad \text{if $X_{n-2} - X_{n-2} > 0$}\\
+    (X_{n-2} &-& X_{n-1}) \mod 10 &=& X_{n} \quad \text{if $X_{n-2} - X_{n-1} > 0$}\\
     (X_{n-2} &*& X_{n-1}) \mod 10 &=& X_{n} \\
     (X_{n-2} &/& X_{n-1}) \mod 10 &=& X_{n} \quad \text{if $X_{n-2} / X_{n-1} \in \mathbb{N}$}\\
 \end{array}
