@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc-markdown-css-theme" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Guillaume Baudart" />
+  <meta name="dcterms.date" content="2023-03-18" />
+  <title>Learning Prolog with Hyperjump from Quanta Magazine</title>
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/skylighting.css" />
+  <link rel="stylesheet" href="css/fonts.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+</head>
+<body>
+
+<header>
+<h1 class="title">Learning Prolog with Hyperjump from Quanta Magazine</h1>
+<blockquote class="metadata">
+<p class="author">
+      Guillaume Baudart
+  </p>
+<p class="date before-toc"><time datetime="2023-03-18">2023-03-18</time></p>
+</blockquote>
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <strong>Contents</strong><label for="contents">⊕</label>
+  <input type="checkbox" id="contents">
+  <ul>
+  <li><a href="#encoding-the-rules" id="toc-encoding-the-rules">Encoding the rules</a></li>
+  <li><a href="#version-1-start-from-the-end" id="toc-version-1-start-from-the-end">Version 1: Start from the end</a></li>
+  <li><a href="#the-missing-rule" id="toc-the-missing-rule">The missing rule</a></li>
+  <li><a href="#version-2-fill-and-check" id="toc-version-2-fill-and-check">Version 2: Fill and check</a></li>
+  </ul>
+</nav>
+
+<main>
+<p>I recently came accross <a href="https://hyperjumps.quantamagazine.org">Hyperjump</a> – a recent online game by Quanta Magazine – and had a lot of fun playing this game.</p>
+<p>The goal is to order a set of digits into a sequence that follows simple arithmetic rules.</p>
+<ul>
+<li>The first 2 digits can be anything</li>
+<li>A digit is valid if it can be obtained from the previous 2 with simple operations (+, -, *, /), only keeping the last digit.</li>
+</ul>
+<span class="math display">\[\begin{array}{l@{}c@{}l@{}c@{}l}
+    (X_{n-2} &amp;+&amp; X_{n-1}) \mod 10 &amp;=&amp; X_{n}\\
+    (X_{n-2} &amp;-&amp; X_{n-2}) \mod 10 &amp;=&amp; X_{n} \quad \text{if $X_{n-2} - X_{n-2} &gt; 0$}\\
+    (X_{n-2} &amp;*&amp; X_{n-1}) \mod 10 &amp;=&amp; X_{n} \\
+    (X_{n-2} &amp;/&amp; X_{n-1}) \mod 10 &amp;=&amp; X_{n} \quad \text{if $X_{n-2} / X_{n-1} \in \mathbb{N}$}\\
+\end{array}\]</span>
+<ul>
+<li>The last digit is always 9.</li>
+</ul>
+<p>The game is to find sequences of increasing length from the same set of 8 digits.</p>
+<p>While discussing this game at a coffee break, one colleague immediately said: “That sounds like something that could be done in Prolog.” And indeed, 20mn later, he had a working solution for the puzzle of the day, and I really wanted to try as well.</p>
+<p>Prolog is a logic programming language where a program is a set of relations between variables and a computation is a query over these relations. One popular exercise is use Prolog to solve logical puzzles: sudoku, n-queens, … The rules are encoded by a set of relations and a typical query is: “Please Prolog, find a solution given these rules”.</p>
+<h1 id="encoding-the-rules">Encoding the rules</h1>
+<p>The first thing to do is to encode the rules with relations between 3 digits:<span class="sidenote-wrapper"><label for="sn-0" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-0" class="margin-toggle"/><span class="sidenote">We use the <code>is</code> operator for arithmetic relation, e.g., <code>A is 2 + 7</code> is the simple relation <span class="math inline">\(A = 2 + 7\)</span>.<br />
+<br />
+</span></span> <span class="math inline">\(X_{n}\)</span>, <span class="math inline">\(X_{n-1}\)</span>, and <span class="math inline">\(X_{n-2}\)</span>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>valid(<span class="dt">X1</span><span class="kw">,</span> <span class="dt">X2</span><span class="kw">,</span> <span class="dt">X3</span>) <span class="kw">:-</span> <span class="dt">X3</span> <span class="dt">is</span> <span class="dv">mod</span>((<span class="dt">X1</span> <span class="dt">+</span> <span class="dt">X2</span>)<span class="er">,</span> <span class="dv">10</span>)<span class="kw">.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>valid(<span class="dt">X1</span><span class="kw">,</span> <span class="dt">X2</span><span class="kw">,</span> <span class="dt">X3</span>) <span class="kw">:-</span> <span class="dt">X3</span> <span class="dt">is</span> <span class="dv">mod</span>((<span class="dt">X1</span> <span class="dt">-</span> <span class="dt">X2</span>)<span class="er">,</span> <span class="dv">10</span>)<span class="kw">,</span> (<span class="dt">X1</span> <span class="fu">-</span> <span class="dt">X2</span>) <span class="dt">&gt;</span> <span class="dv">0</span><span class="kw">.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>valid(<span class="dt">X1</span><span class="kw">,</span> <span class="dt">X2</span><span class="kw">,</span> <span class="dt">X3</span>) <span class="kw">:-</span> <span class="dt">X3</span> <span class="dt">is</span> <span class="dv">mod</span>((<span class="dt">X1</span> <span class="dt">*</span> <span class="dt">X2</span>)<span class="er">,</span> <span class="dv">10</span>)<span class="kw">.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>valid(<span class="dt">X1</span><span class="kw">,</span> <span class="dt">X2</span><span class="kw">,</span> <span class="dt">X3</span>) <span class="kw">:-</span> <span class="dt">X3</span> <span class="dt">is</span> <span class="dv">mod</span>((<span class="dt">X1</span> <span class="dv">//</span> <span class="dt">X2</span>)<span class="er">,</span> <span class="dv">10</span>)<span class="kw">,</span> <span class="dv">0</span> <span class="dt">is</span> <span class="dv">mod</span>(<span class="dt">X1</span><span class="er">,</span> <span class="dt">X2</span>)<span class="kw">.</span></span></code></pre></div>
+<p>Now, we need a relation that capture the fact that we pick digits from a set. This is a classic prolog relation <code>pick(L, X, R)</code> where <code>L</code> is the initial list, <code>X</code> is the chosen element, and <code>R</code> is the resulting list (<code>L</code> without <code>X</code>).<span class="sidenote-wrapper"><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote"><code>[X | T]</code> is the Prolog syntax for a list whose head element is <code>X</code> and <code>T</code> is the tail of the list.<br />
+<br />
+</span></span> In Prolog we can program the relation <code>pick</code> with 2 cases: chose the head of the list, or choose an element in the tail.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pick([<span class="dt">X</span> <span class="fu">|</span> <span class="dt">R</span>]<span class="kw">,</span> <span class="dt">X</span><span class="kw">,</span> <span class="dt">R</span>)<span class="kw">.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>pick([<span class="dt">X</span> <span class="fu">|</span> <span class="dt">T</span>]<span class="kw">,</span> <span class="dt">E</span><span class="kw">,</span> [<span class="dt">X</span> <span class="fu">|</span> <span class="dt">R</span>]) <span class="kw">:-</span> pick(<span class="dt">T</span><span class="kw">,</span> <span class="dt">E</span><span class="kw">,</span> <span class="dt">R</span>)<span class="kw">.</span></span></code></pre></div>
+<h1 id="version-1-start-from-the-end">Version 1: Start from the end</h1>
+<p>For my first attempt, I tried mimicking what I was doing by hand to solve the puzzle, that is, start from the end (digit 9) and build the sequence in reverse order.</p>
+<p>This behavior can be captured with a recursive relation <code>hyperjump(P, N, S)</code> where <code>P</code> is the set of digits and <code>S</code> is a valid sequence with <code>N+1</code> digits where the last digit is 9.</p>
+<p>Starting from the final 9, the only constraint for the first digit <code>X</code> is to be in <code>P</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>hyperjump(<span class="dt">P</span><span class="kw">,</span> <span class="dv">1</span><span class="kw">,</span> [<span class="dt">X</span>, <span class="dv">9</span>]) <span class="kw">:-</span> pick(<span class="dt">P</span><span class="kw">,</span> <span class="dt">X</span><span class="kw">,</span> <span class="dt">_</span>)<span class="kw">.</span></span></code></pre></div>
+<p>To add a digit <code>X1</code> at the beginning of the sequence, we choose <code>X1</code> from <code>P</code>, we check that the beginning of the sequence is valid,<span class="sidenote-wrapper"><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">For some reason, we cannot use <code>N-1</code> directly for the recursive call and need to bind a new variable <code>M</code> with a simple relation <code>M is N - 1</code>.<br />
+<br />
+</span></span> and we check that the last 3 digits validate the rules.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hyperjump(<span class="dt">P</span><span class="kw">,</span> <span class="dt">N</span><span class="kw">,</span> [<span class="dt">X1</span>, <span class="dt">X2</span>, <span class="dt">X3</span> <span class="fu">|</span> <span class="dt">R</span>]) <span class="kw">:-</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  pick(<span class="dt">P</span><span class="kw">,</span> <span class="dt">X1</span><span class="kw">,</span> <span class="dt">P1</span>)<span class="kw">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">M</span> <span class="dt">is</span> <span class="dt">N</span> <span class="dt">-</span> <span class="dv">1</span><span class="kw">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  hyperjump(<span class="dt">P1</span><span class="kw">,</span> <span class="dt">M</span><span class="kw">,</span> [<span class="dt">X2</span>, <span class="dt">X3</span> <span class="fu">|</span> <span class="dt">R</span>])<span class="kw">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  valid(<span class="dt">X1</span><span class="kw">,</span> <span class="dt">X2</span><span class="kw">,</span> <span class="dt">X3</span>)<span class="kw">.</span></span></code></pre></div>
+<p>Finally, we can ask Prolog to list all the solutions using <code>findall</code> and remove duplicates with <code>sort</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>solutions(<span class="dt">P</span><span class="kw">,</span> <span class="dt">N</span><span class="kw">,</span> <span class="dt">X</span>) <span class="kw">:-</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    findall(<span class="dt">S</span><span class="kw">,</span> hyperjump(<span class="dt">P</span><span class="kw">,</span> <span class="dt">N</span><span class="kw">,</span> <span class="dt">S</span>)<span class="kw">,</span> <span class="dt">L</span>)<span class="kw">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    sort(<span class="dt">L</span><span class="kw">,</span> <span class="dt">X</span>)<span class="kw">.</span></span></code></pre></div>
+<p>In the Prolog interpreter the following query then computes all the solutions:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">?-</span> solutions([<span class="dv">1</span>,<span class="dv">8</span>,<span class="dv">1</span>,<span class="dv">8</span>,<span class="dv">7</span>,<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">7</span>]<span class="kw">,</span> <span class="dv">8</span><span class="kw">,</span> <span class="dt">S</span>)<span class="kw">.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">S</span> <span class="kw">=</span> [[<span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">8</span>, <span class="dv">1</span>, <span class="dv">8</span><span class="fu">|</span>...], ...]</span></code></pre></div>
+<p>Adding a pretty printer:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">?-</span> print_solutions([<span class="dv">1</span>,<span class="dv">8</span>,<span class="dv">1</span>,<span class="dv">8</span>,<span class="dv">7</span>,<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">7</span>]<span class="kw">,</span> <span class="dv">8</span>)<span class="kw">.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="kw">,</span> <span class="dv">7</span><span class="kw">,</span> <span class="dv">7</span><span class="kw">,</span> <span class="dv">4</span><span class="kw">,</span> <span class="dv">3</span><span class="kw">,</span> <span class="dv">8</span><span class="kw">,</span> <span class="dv">1</span><span class="kw">,</span> <span class="dv">8</span><span class="kw">,</span> <span class="dv">9</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="kw">,</span> <span class="dv">8</span><span class="kw">,</span> <span class="dv">8</span><span class="kw">,</span> <span class="dv">1</span><span class="kw">,</span> <span class="dv">7</span><span class="kw">,</span> <span class="dv">4</span><span class="kw">,</span> <span class="dv">3</span><span class="kw">,</span> <span class="dv">7</span><span class="kw">,</span> <span class="dv">9</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span><span class="kw">,</span> <span class="dv">4</span><span class="kw">,</span> <span class="dv">7</span><span class="kw">,</span> <span class="dv">7</span><span class="kw">,</span> <span class="dv">1</span><span class="kw">,</span> <span class="dv">8</span><span class="kw">,</span> <span class="dv">8</span><span class="kw">,</span> <span class="dv">1</span><span class="kw">,</span> <span class="dv">9</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span><span class="kw">,</span> <span class="dv">1</span><span class="kw">,</span> <span class="dv">7</span><span class="kw">,</span> <span class="dv">4</span><span class="kw">,</span> <span class="dv">3</span><span class="kw">,</span> <span class="dv">8</span><span class="kw">,</span> <span class="dv">1</span><span class="kw">,</span> <span class="dv">8</span><span class="kw">,</span> <span class="dv">9</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div>
+<p>I tried this on the 03/15/2023 puzzle and it worked great, reaching a score of 11. Next morning I tried again… and failed with a top score of 6. Prolog only found 2 sequences of length 6 instead of the required 3.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">?-</span> print_solutions([<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">5</span>]<span class="kw">,</span> <span class="dv">8</span>)<span class="kw">.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="kw">,</span> <span class="dv">3</span><span class="kw">,</span> <span class="dv">4</span><span class="kw">,</span> <span class="dv">7</span><span class="kw">,</span> <span class="dv">1</span><span class="kw">,</span> <span class="dv">8</span><span class="kw">,</span> <span class="dv">9</span><span class="kw">,</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span><span class="kw">,</span> <span class="dv">4</span><span class="kw">,</span> <span class="dv">3</span><span class="kw">,</span> <span class="dv">1</span><span class="kw">,</span> <span class="dv">4</span><span class="kw">,</span> <span class="dv">5</span><span class="kw">,</span> <span class="dv">9</span><span class="kw">,</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">true.</span></span></code></pre></div>
+<h1 id="the-missing-rule">The missing rule</h1>
+<p>What happened is that I missed one important rule.</p>
+<ul>
+<li>For subtraction or division, if the operation is not directly possible, we can first combine previous digits into a multi-digits number. For instance, <code>7 1 8 3</code> is valid because <span class="math inline">\(71 - 8 = 63\)</span>, and <code>8 3 4 9</code> is valid because <span class="math inline">\(83 - 4 = 79\)</span>. More generally:</li>
+</ul>
+<p><span class="math display">\[
+\begin{array}{l@{}c@{}l@{}c@{}l}
+    (\sum_{i=0}^p 10^i X_{n-2-i} &amp;-&amp; X_{n-1}) \mod 10 &amp;=&amp; X_{n} \quad \text{for $p &lt; n-2$}\\
+    (\sum_{i=0}^p 10^i X_{n-2-i} &amp;/&amp; X_{n-1}) \mod 10 &amp;=&amp; X_{n} \quad \text{for $p &lt; n-2$}\\
+\end{array}
+\]</span></p>
+<p>Let’s add this missing rule to our program.</p>
+<p>First we need to convert a list of digits to a decimal number. This is very easy if the list is in reversed order.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>decimal([<span class="dt">X</span>]<span class="kw">,</span> <span class="dt">N</span>) <span class="kw">:-</span> <span class="dt">N</span> <span class="dt">is</span> <span class="dt">X</span><span class="kw">.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>decimal([<span class="dt">X</span> <span class="fu">|</span> <span class="dt">R</span>]<span class="kw">,</span> <span class="dt">N</span>) <span class="kw">:-</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    decimal(<span class="dt">R</span><span class="kw">,</span> <span class="dt">M</span>)<span class="kw">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">N</span> <span class="dt">is</span> <span class="dv">10</span> <span class="dt">*</span> <span class="dt">M</span> <span class="dt">+</span> <span class="dt">X</span><span class="kw">.</span></span></code></pre></div>
+<p>We can now add a relation <code>combo(L, X2, X3)</code> to capture the new rule. For the subtraction, at worst we need to combine 2 digits<span class="sidenote-wrapper"><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote"><span class="math inline">\((223 - 4) \mod 10 = (23 - 4) \mod 10 = 9\)</span><br />
+<br />
+</span></span>, combining 3 or more digits would yield the same result.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>combo([<span class="dt">A2</span>, <span class="dt">A1</span>]<span class="kw">,</span> <span class="dt">X2</span><span class="kw">,</span> <span class="dt">X3</span>) <span class="kw">:-</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    decimal([<span class="dt">A2</span>, <span class="dt">A1</span>]<span class="kw">,</span> <span class="dt">M</span>)<span class="kw">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">X3</span> <span class="dt">is</span> <span class="dv">mod</span>((<span class="dt">M</span> <span class="dt">-</span> <span class="dt">X2</span>)<span class="er">,</span> <span class="dv">10</span>)<span class="kw">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">M</span> <span class="fu">-</span> <span class="dt">X2</span>) <span class="dt">&gt;</span> <span class="dv">0</span><span class="kw">.</span></span></code></pre></div>
+<p>The division is more tricky, combos of arbitrary sizes can yield different digits. <span class="sidenote-wrapper"><label for="sn-4" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="sidenote"><code>1 4 4 8 8 1 9</code> is valid because <span class="math inline">\(144 / 8 = 18\)</span>.<br />
+<br />
+</span></span> There is no reason to stop at 2-digits combos. We thus extend the <code>combo</code> relation for divisions with lists of arbitrary size.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>combo(<span class="dt">L</span><span class="kw">,</span> <span class="dt">X2</span><span class="kw">,</span> <span class="dt">X3</span>) <span class="kw">:-</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    decimal(<span class="dt">L</span><span class="kw">,</span> <span class="dt">M</span>)<span class="kw">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">X3</span> <span class="dt">is</span> <span class="dv">mod</span>((<span class="dt">M</span> <span class="dv">//</span> <span class="dt">X2</span>)<span class="er">,</span> <span class="dv">10</span>)<span class="kw">,</span> <span class="dv">0</span> <span class="dt">is</span> <span class="dv">mod</span>(<span class="dt">M</span><span class="er">,</span> <span class="dt">X2</span>)<span class="kw">.</span></span></code></pre></div>
+<p>Now, there is a bigger problem. We need to read the sequence from the start to test possible combos, but our first solution build the sequence from the end.<span class="sidenote-wrapper"><label for="sn-5" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-5" class="margin-toggle"/><span class="sidenote">It may be possible to adapt this solution with the <code>combo</code> rules, but after several attempts, I wanted to try something else.<br />
+<br />
+</span></span></p>
+<h1 id="version-2-fill-and-check">Version 2: Fill and check</h1>
+<p>Let’s try another approach. Instead of building a valid sequence from the end, we can generate valid sequences from the beginning and select only sequences that end with 9.</p>
+<p>The first relation <code>fill(P, N, S)</code> return a valid sequence of size <code>N</code> from the set of digits <code>P</code>. The first two digits can be anything in <code>P</code>.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fill(<span class="dt">P</span><span class="kw">,</span> <span class="dv">2</span><span class="kw">,</span> [<span class="dt">X1</span>, <span class="dt">X2</span>]) <span class="kw">:-</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    pick(<span class="dt">P</span><span class="kw">,</span> <span class="dt">X1</span><span class="kw">,</span> <span class="dt">P1</span>)<span class="kw">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    pick(<span class="dt">P1</span><span class="kw">,</span> <span class="dt">X2</span><span class="kw">,</span> <span class="dt">_</span>)<span class="kw">.</span></span></code></pre></div>
+<p>To build a sequence of size <code>N</code>, we choose the last digit <code>X3</code>, we build the beginning of the sequence with the rest of the digits, and check that the last 3 digits validate the rules. Note that the sequence is returned in reverse order. The base case is a list with 2 elements, and we add elements one by one at the head.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fill(<span class="dt">P</span><span class="kw">,</span> <span class="dt">N</span><span class="kw">,</span> [<span class="dt">X3</span>, <span class="dt">X2</span>, <span class="dt">X1</span> <span class="fu">|</span> <span class="dt">R</span>]) <span class="kw">:-</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">M</span> <span class="dt">is</span> <span class="dt">N</span> <span class="dt">-</span> <span class="dv">1</span><span class="kw">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    pick(<span class="dt">P</span><span class="kw">,</span> <span class="dt">X3</span><span class="kw">,</span> <span class="dt">P3</span>)<span class="kw">,</span>           </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    fill(<span class="dt">P3</span><span class="kw">,</span> <span class="dt">M</span><span class="kw">,</span> [<span class="dt">X2</span>, <span class="dt">X1</span> <span class="fu">|</span> <span class="dt">R</span>])<span class="kw">,</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    valid(<span class="dt">X1</span><span class="kw">,</span> <span class="dt">X2</span><span class="kw">,</span> <span class="dt">X3</span>)<span class="kw">.</span></span></code></pre></div>
+<p>We now need to add the missing rule to this relation. We can use the <code>append(A, B, S)</code> relation to test the <code>combo</code> rules<span class="sidenote-wrapper"><label for="sn-6" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-6" class="margin-toggle"/><span class="sidenote">Since the sequence is already in reverse order, we can directly apply the <code>decimal</code> rule in <code>combo</code>.<br />
+<br />
+</span></span> with an arbitrary prefix <code>A</code> of <code>S</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fill(<span class="dt">P</span><span class="kw">,</span> <span class="dt">N</span><span class="kw">,</span> [<span class="dt">X4</span>, <span class="dt">X3</span>, <span class="dt">X2</span>, <span class="dt">X1</span> <span class="fu">|</span> <span class="dt">R</span>]) <span class="kw">:-</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">M</span> <span class="dt">is</span> <span class="dt">N</span> <span class="dt">-</span> <span class="dv">1</span><span class="kw">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    pick(<span class="dt">P</span><span class="kw">,</span> <span class="dt">X4</span><span class="kw">,</span> <span class="dt">P4</span>)<span class="kw">,</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    fill(<span class="dt">P4</span><span class="kw">,</span> <span class="dt">M</span><span class="kw">,</span> [<span class="dt">X3</span>, <span class="dt">X2</span>, <span class="dt">X1</span> <span class="fu">|</span> <span class="dt">R</span>])<span class="kw">,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    append([<span class="dt">A2</span>, <span class="dt">A1</span> <span class="fu">|</span> <span class="dt">AR</span>]<span class="kw">,</span> <span class="dt">_</span><span class="kw">,</span> [<span class="dt">X2</span>, <span class="dt">X1</span> <span class="fu">|</span> <span class="dt">R</span>])<span class="kw">,</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    combo([<span class="dt">A2</span>, <span class="dt">A1</span> <span class="fu">|</span> <span class="dt">AR</span>]<span class="kw">,</span> <span class="dt">X3</span><span class="kw">,</span> <span class="dt">X4</span>)<span class="kw">.</span></span></code></pre></div>
+<p>Finally, the <code>hyperjump</code> relation reject sequences that do not end with 9, and reverse the solution for readability.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>hyperjump(<span class="dt">P</span><span class="kw">,</span> <span class="dt">N</span><span class="kw">,</span> <span class="dt">R</span>) <span class="kw">:-</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">M</span> <span class="dt">is</span> <span class="dt">N</span> <span class="dt">+</span> <span class="dv">1</span><span class="kw">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    fill([<span class="dv">9</span> <span class="fu">|</span> <span class="dt">P</span>]<span class="kw">,</span> <span class="dt">M</span><span class="kw">,</span> [<span class="dv">9</span> <span class="fu">|</span> <span class="dt">S</span>])<span class="kw">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    reverse([<span class="dv">9</span> <span class="fu">|</span> <span class="dt">S</span>]<span class="kw">,</span> <span class="dt">R</span>)<span class="kw">.</span></span></code></pre></div>
+<p>With this approach I was finally able to reach the last level of every puzzle with scores of 14 to 16.</p>
+</main>
+
+<script>
+;(function() {
+  // Non-essential if user has JavaScript off. Just makes checkboxes look nicer.
+  var selector = '.task-list > li > input[type="checkbox"]';
+  var checkboxes = document.querySelectorAll(selector);
+  Array.from(checkboxes).forEach((checkbox) => {
+    var wasChecked = checkbox.checked;
+    checkbox.disabled = false;
+    checkbox.addEventListener('click', (ev) => {ev.target.checked = wasChecked});
+  });
+})();
+</script>
+</body>
+</html>
