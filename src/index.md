@@ -1,5 +1,5 @@
 ---
-title: "gbdrt.dev"
+title: "blog.gbdrt.dev"
 ---
 
 Hello, I am Guillaume Baudart, a Researcher at [Inria Paris](https://www.inria.fr/en/inria-paris-centre).
