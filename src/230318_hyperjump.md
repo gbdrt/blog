@@ -21,6 +21,8 @@ The goal is to order a set of digits into a sequence that follows simple arithme
 - The last digit is always 9.
 
 The game is to find sequences of increasing length from the same set of 8 digits.
+Everyday you get a new set, and you need to find 4 5-digits sequences, 3 6-digits sequences, 2 7-digits sequence, and as many 8-digits sequences as you can.
+Each new sequence gets you 1 point.^[Reaching 10 points at the first complete 8-digits sequence.] 
 
 While discussing this game at a coffee break, one colleague immediately said: *That sounds like something that could be done in Prolog.*
 And indeed, 20mn later, he had a working solution for the puzzle of the day, and I really wanted to try as well.
