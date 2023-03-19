@@ -213,4 +213,7 @@ hyperjump(P, N, R) :-
 
 With this approach I was finally able to reach the last level of every puzzle with scores ranging from 14 to a record of 19. 
 
+
+The complete source code is available [here](../src/hyperjump.pl).
+
 ------------------------------------
