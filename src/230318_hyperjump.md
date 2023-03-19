@@ -130,7 +130,7 @@ $$
 Let's add this missing rule to our program.
 
 First we need to convert a list of digits to a decimal number.
-This is very easy if the list is in reversed order.
+This is very easy if the list is in reverse order.
 
 ```prolog
 decimal([X], N) :- N is X.

@@ -113,7 +113,7 @@
 \end{array}
 \]</span></p>
 <p>Let’s add this missing rule to our program.</p>
-<p>First we need to convert a list of digits to a decimal number. This is very easy if the list is in reversed order.</p>
+<p>First we need to convert a list of digits to a decimal number. This is very easy if the list is in reverse order.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode prolog"><code class="sourceCode prolog"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>decimal([<span class="dt">X</span>]<span class="kw">,</span> <span class="dt">N</span>) <span class="kw">:-</span> <span class="dt">N</span> <span class="dt">is</span> <span class="dt">X</span><span class="kw">.</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>decimal([<span class="dt">X</span> <span class="fu">|</span> <span class="dt">R</span>]<span class="kw">,</span> <span class="dt">N</span>) <span class="kw">:-</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    decimal(<span class="dt">R</span><span class="kw">,</span> <span class="dt">M</span>)<span class="kw">,</span></span>
