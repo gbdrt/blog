@@ -4,7 +4,7 @@ author: "Guillaume Baudart"
 date: "2023-03-18"
 ---
 
-I recently came accross [Hyperjump](https://hyperjumps.quantamagazine.org) -- a recent online game by [Quanta Magazine](https://www.quantamagazine.org/) -- and had a lot of fun playing this game.
+I recently came accross [Hyperjump](https://hyperjumps.quantamagazine.org) -- a new online game by [Quanta Magazine](https://www.quantamagazine.org/) -- and had a lot of fun playing this game.
 
 The goal is to order a set of digits into a sequence that follows simple arithmetic rules.
 
@@ -22,7 +22,7 @@ The goal is to order a set of digits into a sequence that follows simple arithme
 
 The game is to find sequences of increasing length from the same set of 8 digits.
 
-While discussing this game at a coffee break, one colleague immediately said: "That sounds like something that could be done in Prolog."
+While discussing this game at a coffee break, one colleague immediately said: *That sounds like something that could be done in Prolog.*
 And indeed, 20mn later, he had a working solution for the puzzle of the day, and I really wanted to try as well.
 
 Prolog is a logic programming language where a program is a set of relations between variables and a computation is a query over these relations.

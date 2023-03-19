@@ -36,7 +36,7 @@
 </nav>
 
 <main>
-<p>I recently came accross <a href="https://hyperjumps.quantamagazine.org">Hyperjump</a> – a recent online game by <a href="https://www.quantamagazine.org/">Quanta Magazine</a> – and had a lot of fun playing this game.</p>
+<p>I recently came accross <a href="https://hyperjumps.quantamagazine.org">Hyperjump</a> – a new online game by <a href="https://www.quantamagazine.org/">Quanta Magazine</a> – and had a lot of fun playing this game.</p>
 <p>The goal is to order a set of digits into a sequence that follows simple arithmetic rules.</p>
 <ul>
 <li>The first 2 digits can be anything</li>
@@ -52,7 +52,7 @@
 <li>The last digit is always 9.</li>
 </ul>
 <p>The game is to find sequences of increasing length from the same set of 8 digits.</p>
-<p>While discussing this game at a coffee break, one colleague immediately said: “That sounds like something that could be done in Prolog.” And indeed, 20mn later, he had a working solution for the puzzle of the day, and I really wanted to try as well.</p>
+<p>While discussing this game at a coffee break, one colleague immediately said: <em>That sounds like something that could be done in Prolog.</em> And indeed, 20mn later, he had a working solution for the puzzle of the day, and I really wanted to try as well.</p>
 <p>Prolog is a logic programming language where a program is a set of relations between variables and a computation is a query over these relations. One popular exercise is use Prolog to solve logical puzzles: sudoku, n-queens, … The rules are encoded by a set of relations and a typical query is: “Please Prolog, find a solution given these rules”.</p>
 <h1 id="encoding-the-rules">Encoding the rules</h1>
 <p>The first thing to do is to encode the rules with relations between 3 digits:<span class="sidenote-wrapper"><label for="sn-0" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-0" class="margin-toggle"/><span class="sidenote">We use the <code>is</code> operator for arithmetic relation, e.g., <code>A is 2 + 7</code> is the simple relation <span class="math inline">\(A = 2 + 7\)</span>.<br />
