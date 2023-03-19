@@ -161,7 +161,7 @@ combo(L, X2, X3) :-
 ```
 
 Now, there is a bigger problem.
-We need to read the sequence from the start to test possible combos, but our first solution build the sequence from the end.^[It may be possible to adapt this solution with the `combo` rules, but after several attempts, I wanted to try something else.] 
+We need to read the sequence from the start to test possible combos, but our first solution builds the sequence from the end.^[It may be possible to adapt this solution with the `combo` rules, but after several attempts, I wanted to try something else.] 
 
 # Version 2: Fill and check
 
