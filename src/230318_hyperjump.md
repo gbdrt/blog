@@ -29,7 +29,7 @@ And indeed, 20mn later, he had a working solution for the puzzle of the day, and
 
 Prolog is a logic programming language where a program is a set of relations between variables and a computation is a query over these relations.
 One popular exercise is use Prolog to solve logical puzzles: sudoku, n-queens, ...
-The rules are encoded by a set of relations and a typical query is: "Please Prolog, find a solution given these rules".
+The rules are encoded by a set of relations and a typical query is: *Please Prolog, find a solution given these rules*.
 
 
 # Encoding the rules
