@@ -14,5 +14,3 @@ My professional page can be found [here](https://guillaume.baudart.eu).
 
 ### [Solving Quanta Magazine Hyperjump with Prolog](230318_hyperjump.html) 
 March 18, 2023.
-
-------------------------------------
