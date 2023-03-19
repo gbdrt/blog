@@ -44,7 +44,7 @@ valid(X1, X2, X3) :- X3 is mod((X1 // X2), 10), 0 is mod(X1, X2).
 ```
 
 Now, we need a relation that captures the fact that we pick digits from a set.
-This is a classic prolog relation `pick(L, X, R)` where `L` is the initial list, `X` is the chosen element, and `R` is the resulting list (`L` without `X`).^[`[X | T]` is the Prolog syntax for a list whose head element is `X` and `T` is the tail of the list.]
+This is a classic Prolog relation `pick(L, X, R)` where `L` is the initial list, `X` is the chosen element, and `R` is the resulting list (`L` without `X`).^[`[X | T]` is the Prolog syntax for a list whose head element is `X` and `T` is the tail of the list.]
 In Prolog we can program the relation `pick` with 2 cases: chose the head of the list, or choose an element in the tail.
 
 ```prolog
@@ -107,8 +107,8 @@ Prolog only found 2 sequences of length 6 instead of the required 3.
 
 ```prolog
 ?- print_solutions([4, 4, 7, 3, 1, 1, 8, 5], 8).
-1, 3, 4, 7, 1, 8, 9, 
-7, 4, 3, 1, 4, 5, 9, 
+1, 3, 4, 7, 1, 8, 9
+7, 4, 3, 1, 4, 5, 9 
 true.
 ```
 
