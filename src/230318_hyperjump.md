@@ -168,7 +168,7 @@ We need to read the sequence from the start to test possible combos, but our fir
 Let's try another approach.
 Instead of building a valid sequence from the end, we can generate valid sequences from the beginning and select only sequences that end with 9.
 
-The first relation `fill(P, N, S)` return a valid sequence of size `N` from the set of digits `P`.
+The first relation `fill(P, N, S)` returns a valid sequence of size `N` from the set of digits `P`.
 The first two digits can be anything in `P`.
 
 ```prolog
@@ -202,7 +202,7 @@ fill(P, N, [X4, X3, X2, X1 | R]) :-
     combo([A2, A1 | AR], X3, X4).
 ```
 
-Finally, the `hyperjump` relation reject sequences that do not end with 9, and reverse the solution for readability.
+Finally, the `hyperjump` relation rejects sequences that do not end with 9, and reverse the solution for readability.
 
 ```prolog
 hyperjump(P, N, R) :-
