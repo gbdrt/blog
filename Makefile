@@ -1,3 +1,9 @@
+SOURCES=$(wildcard src/*.md)
+TARGETS=$(patsubst src/%.md,docs/%.html,$(SOURCES))
+
+all: $(TARGETS)
+
+
 docs/%.html: src/%.md 
 	pandoc \
 		--mathjax \

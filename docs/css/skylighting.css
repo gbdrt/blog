@@ -14,7 +14,7 @@
 pre.sourceCode { background: var(--color-code-highlight-bg) }
 pre code { color: #657B83; }
 code span.kw { color: #009952; } /* Keyword */
-code span.dt { color: #6400b5; } /* DataType */
+code span.dt { color: #963ce0; } /* DataType */
 code span.dv { color: #2AA198; } /* DecVal */™
 code span.bn { color: #2AA198; } /* BaseN */
 code span.fl { color: #2AA198; } /* Float */

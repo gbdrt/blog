@@ -93,6 +93,6 @@ $endfor$
 </body>
 <footer>
 <hr>
-Powered by <a href="https://pandoc.org/">Pandoc</a> with a theme sligthly adapted from <a href="">pandoc-markdown-css-theme</a>
+Powered by <a href="https://pandoc.org/">Pandoc</a> with a theme sligthly adapted from <a href="https://github.com/jez/pandoc-markdown-css-theme">pandoc-markdown-css-theme</a>
 </footer>
 </html>
