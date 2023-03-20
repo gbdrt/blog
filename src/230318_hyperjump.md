@@ -216,3 +216,5 @@ With this approach I was finally able to reach the last level of every puzzle wi
 
 
 The complete source code is available [here](https://gist.github.com/gbdrt/f8e56c96bb3b10cdaa0320774f26d706).
+
+Thanks a lot to [Basile Pesin](https://vertmo.org/) for the Prolog crash course and the initial motivation!
