@@ -5,7 +5,7 @@ date: "2023-03-18"
 return-url: "https://blog.gbdrt.dev"
 ---
 
-I recently came accross [Hyperjump](https://hyperjumps.quantamagazine.org) -- a new online game by [Quanta Magazine](https://www.quantamagazine.org/) -- and had a lot of fun playing this game.
+I recently came accross [Hyperjump](https://hyperjumps.quantamagazine.org) --- a new online game by [Quanta Magazine](https://www.quantamagazine.org/) --- and had a lot of fun playing this game.
 
 The goal is to order a set of digits into a sequence that follows simple arithmetic rules.
 
