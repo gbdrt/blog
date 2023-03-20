@@ -88,27 +88,25 @@ In the Prolog interpreter the following query then computes all the solutions:
 
 ```prolog
 ?- solutions([1,8,1,8,7,4,3,7], 8, S).
-S = [[1, 7, 7, 4, 3, 8, 1, 8|...], ...]
+S = [[7, 3, 4, 7, 1, 8, 8, 1|...], [7, 4, 3, 7, 1, 8, 8|...]].
 ```
 
 Adding a pretty printer:
 
 ```prolog
 ?- print_solutions([1,8,1,8,7,4,3,7], 8).
-1, 7, 7, 4, 3, 8, 1, 8, 9 
-1, 8, 8, 1, 7, 4, 3, 7, 9 
-3, 4, 7, 7, 1, 8, 8, 1, 9 
-7, 1, 7, 4, 3, 8, 1, 8, 9
-...
+7, 3, 4, 7, 1, 8, 8, 1, 9 
+7, 4, 3, 7, 1, 8, 8, 1, 9 
+true.
 ```
 
-I tried this on the 03/15/2023 puzzle and it worked great, reaching a score of 11.
+I tried this on the 03/15/2023 puzzle and it worked great, reaching a score of 11.^[10 points plus one additional 8-digits sequence.]
 Next morning I tried again... and failed with a top score of 6.
-Prolog only found 2 sequences of length 6 instead of the required 3.
+Prolog only found 2 6-digits sequences instead of the required 3.
 
 ```prolog
-?- print_solutions([4, 4, 7, 3, 1, 1, 8, 5], 8).
-1, 3, 4, 7, 1, 8, 9
+?- print_solutions([4, 4, 7, 3, 1, 1, 8, 5], 6).
+1, 3, 4, 7, 1, 8, 9 
 7, 4, 3, 1, 4, 5, 9 
 true.
 ```
@@ -141,7 +139,7 @@ decimal([X | R], N) :-
 ```
 
 We can now add a relation `combo(L, X2, X3)` to capture the new rule.
-For the subtraction, at worst we need to combine 2 digits,^[For instance, $(223 - 4) \mod 10 = (23 - 4) \mod 10 = 9$.] combining 3 or more digits would yield the same result.
+For the subtraction, at worst we need to combine 2 digits,^[For instance, $(223 - 4) \mod 10 = 9$ and $(23 - 4) \mod 10 = 9$.] combining 3 or more digits would yield the same result.
 
 ```prolog
 combo([A2, A1], X2, X3) :-
