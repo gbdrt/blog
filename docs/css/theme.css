@@ -29,14 +29,14 @@
 
   --font-family-prose: 'Open Sans',sans-serif;
   --font-family-heading: 'Open Sans', sans-serif;
-  --font-family-code: Menlo, monospace;
+  --font-family-code: Inconsolata, monospace;
   --side-note-number-font-family: var(--font-family-prose);
 
   --line-height: 26px;
   --font-size: 17px;
 
-  --inline-code-font-size: 15px;
-  --code-block-font-size: 14px;
+  --inline-code-font-size: 17px;
+  --code-block-font-size: 17px;
   --code-block-side-padding: 8px;
   --line-numbers-font-size: 12px;
 
