@@ -87,14 +87,14 @@ solutions(P, N, X) :-
 In the Prolog interpreter the following query then computes all the solutions:
 
 ```prolog
-?- solutions([1,8,1,8,7,4,3,7], 8, S).
+?- solutions([1, 8, 1, 8, 7, 4, 3, 7], 8, S).
 S = [[7, 3, 4, 7, 1, 8, 8, 1|...], [7, 4, 3, 7, 1, 8, 8|...]].
 ```
 
 Adding a pretty printer:
 
 ```prolog
-?- print_solutions([1,8,1,8,7,4,3,7], 8).
+?- print_solutions([1, 8, 1, 8, 7, 4, 3, 7], 8).
 7, 3, 4, 7, 1, 8, 8, 1, 9 
 7, 4, 3, 7, 1, 8, 8, 1, 9 
 true.
