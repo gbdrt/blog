@@ -27,7 +27,7 @@
 
   /* --- Text --- */
 
-  --font-family-prose: 'Open Sans',sans-serif;
+  --font-family-prose: 'Open Sans', sans-serif;
   --font-family-heading: 'Open Sans', sans-serif;
   --font-family-code: Inconsolata, monospace;
   --side-note-number-font-family: var(--font-family-prose);
